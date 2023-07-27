@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Flask API Input</title>
+    <link rel="stylesheet" href="./../static/styles.css">
+</head>
+<body>
+    <h1>Input Image and Apply Image Processing Feature!</h1>
+    <form id="form" enctype="multipart/form-data">
+        <input type="file" id="image" name="image">
+        <select name="option" id="option">
+            <option value="1">Resize Image</option>
+            <option value="2">Rotate Image (45 degrees)</option>
+            <option value="3">Crop Image</option>
+            <option value="4">Flip Image (Top to Bottom)</option>
+            <option value="5">Threshold of an Image</option>
+            <option value="6">Blur an Image</option>
+            <option value="7">Sharpen the Image</option>
+            <option value="8">Detecting Edges</option>
+            <option value="9">Increase Contrast of Image</option>
+            <option value="10">Segmentation</option>
+            <option value="11">Image to Grayscale Image</option>
+            <option value="12">Image to HSV Image</option>
+        </select>
+        <input type="button" value="Submit" onclick="submitForm()">
+    </form>
+    <div id="response">
+        <h1>Original Image</h1>
+        <img id="image-original" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Blank_square.svg/2048px-Blank_square.svg.png" alt="Image" class="fixed-view">
+    </div>
+    <div id="response">
+        <h1>Filtered Image</h1>
+        <img id="image-display" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Blank_square.svg/2048px-Blank_square.svg.png" alt="Image" class="fixed-view">
+    </div>
+
+    <script>
+        function submitForm() {
+            // Get the form data
+            var formData = new FormData(document.getElementById("form"));
+            console.log(formData.get("image"));
+            console.log(formData.get("option"));
+            // Make the API call
+            if(formData){
+                fetch("http://172.16.0.107:8000/imageupload", {
+                    method: "POST",
+                    body: formData
+                })
+                .then(response => response.blob())
+                .then(data => {
+                    // Display the image
+                    var objectURL = URL.createObjectURL(data);
+                    document.getElementById("image-original").src = objectURL;
+                });
+                fetch("http://172.16.0.107:8000/image", {
+                    method: "POST",
+                    body: formData
+                })
+                .then(response => response.blob())
+                .then(data => {
+                    // Display the image
+                    var objectURL = URL.createObjectURL(data);
+                    document.getElementById("image-display").src = objectURL;
+                });
+            }
+        }
+    </script>
+</body>
+</html>
