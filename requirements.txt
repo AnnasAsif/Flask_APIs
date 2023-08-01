@@ -1,1 +1,7 @@
 flask
+numpy
+opencv-python
+pillow
+pymongo
+tqdm
+tensorflow
